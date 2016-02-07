@@ -138,9 +138,9 @@ y_test <- tbl_df(read.table("data/test/y_test.txt", header = FALSE, col.names = 
 mian_test <- bind_cols(x_test,y_test)
 
 ##Read Person Ids
-subject_train <- tbl_df(read.table("data/train/subject_train.txt", header = FALSE, col.names = c("Person Id")))
+subject_test <- tbl_df(read.table("data/test/subject_test.txt", header = FALSE, col.names = c("Person Id")))
 ### Bind Person id  to Main Data Set
-mian_training <- bind_cols(mian_training, subject_train)
+mian_test <- bind_cols(mian_test, subject_test)
 ###########################################################################
 ##Read Body Triaxial acceleration from the accelerometer
 ###Read X Axis
