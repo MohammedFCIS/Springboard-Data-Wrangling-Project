@@ -154,7 +154,7 @@ mian_test <- bind_cols(mian_test, body_acc_x_test)
 ####Read Y
 body_acc_y_test <- tbl_df(read.table("data/test/Inertial Signals/body_acc_y_test.txt", col.names = body_acc_y_train_names))
 ####Bind Body Y acceleration to Main Data Set
-mian_test <- bind_cols(mian_test, body_acc_y_train)
+mian_test <- bind_cols(mian_test, body_acc_y_test)
 
 ###Read Z Axis
 ####Read Z
