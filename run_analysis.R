@@ -217,9 +217,9 @@ main_std <- main %>% select(contains( "std"))
 main_mean <- main %>% select(contains( "mean"))
 main_std_mean <- bind_cols(main_std, main_mean)
 ###################################################################################################
-############################# Extracts columns containing mean and standard deviation for each measurements ########
+############################# Tidy data set with the average of each variable for each activity and each subject. ########
 ###################################################################################################mu
-
+main_av <- main %>% group_by(ActivityLabel,ActivityName,Person.Id)%>%  summarise_each(funs(mean))
 
 
 
