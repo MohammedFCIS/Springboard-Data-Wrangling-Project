@@ -6,7 +6,7 @@ library(tidyr)
 ###################################################################################################
 # Read Training Data
 ##Read the feature lables
-features <- tbl_df(read.table("data/features.txt",col.names = fc("id","feature"),stringsAsFactors = FALSE))
+features <- tbl_df(read.table("data/features.txt",col.names = c("id","feature"),stringsAsFactors = FALSE))
 ##Make Syntactically Valid Names
 features_lbls <- make.names(features$feature, unique = TRUE)
 
@@ -133,9 +133,9 @@ mian_training <- bind_cols(mian_training, body_gyro_z_train)
 x_test <- tbl_df(read.table("data/test/X_test.txt", header = FALSE,col.names = features_lbls))
 
 ##Read activity
-y_train <- tbl_df(read.table("data/train/y_train.txt", header = FALSE, col.names = c("Activity")))
+y_test <- tbl_df(read.table("data/test/y_test.txt", header = FALSE, col.names = c("Activity")))
 ### Bind Activity to Main Data Set
-mian_training <- bind_cols(x_train,y_train)
+mian_test <- bind_cols(x_test,y_test)
 
 ##Read Person Ids
 subject_train <- tbl_df(read.table("data/train/subject_train.txt", header = FALSE, col.names = c("Person Id")))
