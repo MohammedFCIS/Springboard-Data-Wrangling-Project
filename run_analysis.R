@@ -181,34 +181,16 @@ mian_test <- bind_cols(mian_test, total_acc_z_test)
 ########################################################################################
 ##Read Triaxial Angular velocity from the gyroscope
 ###Read X Axis
-####Create Name Vector
-body_gyro_x_train_names <- c()
-for (i in 1:128){body_gyro_x_train_names[i] <- "body_gyro_x"}
-####Make Syntactically Valid Names
-body_gyro_x_train_names <- make.names(body_gyro_x_train_names, unique = TRUE)
-####Read X
-body_gyro_x_train <- tbl_df(read.table("data/train/Inertial Signals/body_gyro_x_train.txt", col.names = body_gyro_x_train_names))
+body_gyro_x_test <- tbl_df(read.table("data/test/Inertial Signals/body_gyro_x_test.txt", col.names = body_gyro_x_train_names))
 ####Bind Body X acceleration to Main Data Set
-mian_training <- bind_cols(mian_training, body_gyro_x_train)
+mian_test <- bind_cols(mian_test, body_gyro_x_test)
 
 ###Read Y Axis
-####Create Name Vector
-body_gyro_y_train_names <- c()
-for (i in 1:128){body_gyro_y_train_names[i] <- "body_gyro_y"}
-####Make Syntactically Valid Names
-body_gyro_y_train_names <- make.names(body_gyro_y_train_names, unique = TRUE)
-####Read Y
-body_gyro_y_train <- tbl_df(read.table("data/train/Inertial Signals/body_gyro_y_train.txt", col.names = body_gyro_y_train_names))
+body_gyro_y_test <- tbl_df(read.table("data/test/Inertial Signals/body_gyro_y_test.txt", col.names = body_gyro_y_train_names))
 ####Bind Body Y acceleration to Main Data Set
-mian_training <- bind_cols(mian_training, body_gyro_y_train)
+mian_test <- bind_cols(mian_test, body_gyro_y_test)
 
 ###Read Z Axis
-####Create Name Vector
-body_gyro_z_train_names <- c()
-for (i in 1:128){body_gyro_z_train_names[i] <- "body_gyro_z"}
-####Make Syntactically Valid Names
-body_gyro_z_train_names <- make.names(body_gyro_z_train_names, unique = TRUE)
-####Read Z
-body_gyro_z_train <- tbl_df(read.table("data/train/Inertial Signals/body_gyro_z_train.txt", col.names = body_gyro_z_train_names))
+body_gyro_z_test <- tbl_df(read.table("data/test/Inertial Signals/body_gyro_z_test.txt", col.names = body_gyro_z_train_names))
 ####Bind Body Z acceleration to Main Data Set
-mian_training <- bind_cols(mian_training, body_gyro_z_train)
+mian_test <- bind_cols(mian_test, body_gyro_z_test)
