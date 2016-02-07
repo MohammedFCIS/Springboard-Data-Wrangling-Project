@@ -194,3 +194,5 @@ mian_test <- bind_cols(mian_test, body_gyro_y_test)
 body_gyro_z_test <- tbl_df(read.table("data/test/Inertial Signals/body_gyro_z_test.txt", col.names = body_gyro_z_train_names))
 ####Bind Body Z acceleration to Main Data Set
 mian_test <- bind_cols(mian_test, body_gyro_z_test)
+#Merge the Two Main Dataset
+main <- union(mian_training, mian_test)
