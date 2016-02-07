@@ -1,0 +1,50 @@
+library(reader)
+library(dplyr)
+library(tidyr)
+# Read Training Data
+##Read the feature lables
+features <- tbl_df(read.table("data/features.txt",col.names = fc("id","feature"),stringsAsFactors = FALSE))
+##Make Syntactically Valid Names
+features_lbls <- make.names(features$feature, unique = TRUE)
+
+##Read feature data
+##Assign the feature lables to it
+x_train <- tbl_df(read.table("data/train/X_train.txt", header = FALSE,col.names = features_lbls))
+
+##Read activity
+y_train <- tbl_df(read.table("data/train/y_train.txt", header = FALSE, col.names = c("Activity")))
+### Bind Activity to Main Data Set
+main <- bind_cols(x_train,y_train)
+
+##Read Person Ids
+subject_train <- tbl_df(read.table("data/train/subject_train.txt", header = FALSE, col.names = c("Person Id")))
+### Bind Person id  to Main Data Set
+main <- bind_cols(main, subject_train)
+
+##Read Body Triaxial acceleration from the accelerometer
+###Read X Axis
+####Create Name Vector
+body_acc_x_train_names <- c()
+for (i in 1:128){body_acc_x_train_names[i] <- "body_acc_x"}
+####Make Syntactically Valid Names
+body_acc_x_train_names <- make.names(body_acc_x_train_names, unique = TRUE)
+####Read X
+body_acc_x_train <- tbl_df(read.table("data/train/Inertial Signals/body_acc_x_train.txt", col.names = body_acc_x_train_names))
+
+###Read Y Axis
+####Create Name Vector
+body_acc_y_train_names <- c()
+for (i in 1:128){body_acc_y_train_names[i] <- "body_acc_y"}
+####Make Syntactically Valid Names
+body_acc_y_train_names <- make.names(body_acc_y_train_names, unique = TRUE)
+####Read Y
+body_acc_y_train <- tbl_df(read.table("data/train/Inertial Signals/body_acc_y_train.txt", col.names = body_acc_y_train_names))
+
+###Read Z Axis
+####Create Name Vector
+body_acc_z_train_names <- c()
+for (i in 1:128){body_acc_z_train_names[i] <- "body_acc_z"}
+####Make Syntactically Valid Names
+body_acc_z_train_names <- make.names(body_acc_z_train_names, unique = TRUE)
+####Read Z
+body_acc_z_train <- tbl_df(read.table("data/train/Inertial Signals/body_acc_z_train.txt", col.names = body_acc_z_train_names))
