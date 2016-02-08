@@ -1,0 +1,363 @@
+---
+title: 'Data Wrangling Project'
+output: html_document
+---
+
+# Load Common Libs
+
+```{r}
+suppressMessages(library(reader))
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyr))
+```
+
+#Merges the training and the test sets to create one data set
+## Read Training Data
+###Read activity
+```{r}
+y_train <- tbl_df(read.table("data/train/y_train.txt", header = FALSE, col.names = c("ActivityLabel")))
+y_train <- y_train %>% mutate(ActivityName= ifelse(ActivityLabel == 1,"WALKING",ifelse(ActivityLabel == 2, "WALKING_UPSTAIRS",
+                                                                           ifelse(ActivityLabel == 3, "WALKING_UPSTAIRS",
+                                                                           ifelse(ActivityLabel == 4, "WALKING_DOWNSTAIRS",
+                                                                           ifelse(ActivityLabel == 5, "SITTING",
+                                                                           ifelse(ActivityLabel == 6, "LAYING",NA)))))))
+```
+
+###Read Person Ids
+```{r}
+subject_train <- tbl_df(read.table("data/train/subject_train.txt", header = FALSE, col.names = c("Person Id")))
+```
+
+#### Bind Person id  to Training Main Data Set
+```{r}
+main_training <- bind_cols(y_train, subject_train)
+```
+
+###Read the feature lables
+```{r}
+features <- tbl_df(read.table("data/features.txt",col.names = c("id","feature"),stringsAsFactors = FALSE))
+```
+###Make Syntactically Valid Names
+```{r}
+features_lbls <- make.names(features$feature, unique = TRUE)
+```
+
+###Read feature data
+####Assign the feature lables to it
+```{r}
+x_train <- tbl_df(read.table("data/train/X_train.txt", header = FALSE,col.names = features_lbls))
+```
+#### Bind Activity to Main Data Set
+```{r}
+main_training <- bind_cols(main_training,x_train)
+```
+
+###Read Body Triaxial acceleration from the accelerometer
+####Read X Axis
+#####Create Name Vector
+```{r}
+body_acc_x_names <- c()
+for (i in 1:128){body_acc_x_names[i] <- "body_acc_x"}
+```
+#####Make Syntactically Valid Names
+```{r}
+body_acc_x_names <- make.names(body_acc_x_names, unique = TRUE)
+```
+#####Read X
+```{r}
+body_acc_x_train <- tbl_df(read.table("data/train/Inertial Signals/body_acc_x_train.txt", col.names = body_acc_x_names))
+```
+#####Bind Body X acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, body_acc_x_train)
+```
+####Read Y Axis
+#####Create Name Vector
+```{r}
+body_acc_y_names <- c()
+for (i in 1:128){body_acc_y_names[i] <- "body_acc_y"}
+```
+#####Make Syntactically Valid Names
+```{r}
+body_acc_y_names <- make.names(body_acc_y_names, unique = TRUE)
+```
+#####Read Y
+```{r}
+body_acc_y_train <- tbl_df(read.table("data/train/Inertial Signals/body_acc_y_train.txt", col.names = body_acc_y_names))
+```
+#####Bind Body Y acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, body_acc_y_train)
+```
+####Read Z Axis
+#####Create Name Vector
+```{r}
+body_acc_z_names <- c()
+for (i in 1:128){body_acc_z_names[i] <- "body_acc_z"}
+```
+#####Make Syntactically Valid Names
+```{r}
+body_acc_z_names <- make.names(body_acc_z_names, unique = TRUE)
+```
+#####Read Z
+```{r}
+body_acc_z_train <- tbl_df(read.table("data/train/Inertial Signals/body_acc_z_train.txt", col.names = body_acc_z_names))
+```
+#####Bind Body Z acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, body_acc_z_train)
+```
+###Read Total Triaxial acceleration from the accelerometer
+####Read X Axis
+#####Create Name Vector
+```{r}
+total_acc_x_names <- c()
+for (i in 1:128){total_acc_x_names[i] <- "total_acc_x"}
+```
+#####Make Syntactically Valid Names
+```{r}
+total_acc_x_names <- make.names(total_acc_x_names, unique = TRUE)
+```
+#####Read X
+```{r}
+total_acc_x_train <- tbl_df(read.table("data/train/Inertial Signals/total_acc_x_train.txt", col.names = total_acc_x_names))
+```
+#####Bind Body X acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, total_acc_x_train)
+```
+####Read Y Axis
+#####Create Name Vector
+```{r}
+total_acc_y_names <- c()
+for (i in 1:128){total_acc_y_names[i] <- "total_acc_y"}
+```
+#####Make Syntactically Valid Names
+```{r}
+total_acc_y_names <- make.names(total_acc_y_names, unique = TRUE)
+```
+#####Read Y
+```{r}
+total_acc_y_train <- tbl_df(read.table("data/train/Inertial Signals/total_acc_y_train.txt", col.names = total_acc_y_names))
+```
+#####Bind Body Y acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, total_acc_y_train)
+```
+####Read Z Axis
+#####Create Name Vector
+```{r}
+total_acc_z_names <- c()
+for (i in 1:128){total_acc_z_names[i] <- "total_acc_z"}
+```
+#####Make Syntactically Valid Names
+```{r}
+total_acc_z_names <- make.names(total_acc_z_names, unique = TRUE)
+```
+#####Read Z
+```{r}
+total_acc_z_train <- tbl_df(read.table("data/train/Inertial Signals/total_acc_z_train.txt", col.names = total_acc_z_names))
+```
+#####Bind Body Z acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, total_acc_z_train)
+```
+
+###Read Triaxial Angular velocity from the gyroscope
+####Read X Axis
+#####Create Name Vector
+```{r}
+body_gyro_x_names <- c()
+for (i in 1:128){body_gyro_x_names[i] <- "body_gyro_x"}
+```
+#####Make Syntactically Valid Names
+```{r}
+body_gyro_x_names <- make.names(body_gyro_x_names, unique = TRUE)
+```
+#####Read X
+```{r}
+body_gyro_x_train <- tbl_df(read.table("data/train/Inertial Signals/body_gyro_x_train.txt", col.names = body_gyro_x_names))
+```
+#####Bind Body X acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, body_gyro_x_train)
+```
+####Read Y Axis
+#####Create Name Vector
+```{r}
+body_gyro_y_names <- c()
+for (i in 1:128){body_gyro_y_names[i] <- "body_gyro_y"}
+```
+#####Make Syntactically Valid Names
+```{r}
+body_gyro_y_names <- make.names(body_gyro_y_names, unique = TRUE)
+```
+#####Read Y
+```{r}
+body_gyro_y_train <- tbl_df(read.table("data/train/Inertial Signals/body_gyro_y_train.txt", col.names = body_gyro_y_names))
+```
+#####Bind Body Y acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, body_gyro_y_train)
+```
+####Read Z Axis
+#####Create Name Vector
+```{r}
+body_gyro_z_names <- c()
+for (i in 1:128){body_gyro_z_names[i] <- "body_gyro_z"}
+```
+#####Make Syntactically Valid Names
+```{r}
+body_gyro_z_names <- make.names(body_gyro_z_names, unique = TRUE)
+```
+#####Read Z
+```{r}
+body_gyro_z_train <- tbl_df(read.table("data/train/Inertial Signals/body_gyro_z_train.txt", col.names = body_gyro_z_names))
+```
+#####Bind Body Z acceleration to Main Data Set
+```{r}
+main_training <- bind_cols(main_training, body_gyro_z_train)
+main_training
+```
+
+## Read Test Data
+###Read feature data
+###Read activity
+```{r}
+y_test <- tbl_df(read.table("data/test/y_test.txt", header = FALSE, col.names = c("ActivityLabel")))
+y_test <- y_test %>% mutate(ActivityName= ifelse(ActivityLabel == 1,"WALKING",ifelse(ActivityLabel == 2, "WALKING_UPSTAIRS",
+                                                                         ifelse(ActivityLabel == 3, "WALKING_UPSTAIRS",
+                                                                         ifelse(ActivityLabel == 4, "WALKING_DOWNSTAIRS",
+                                                                         ifelse(ActivityLabel == 5, "SITTING",
+                                                                         ifelse(ActivityLabel == 6, "LAYING",NA)))))))
+
+
+```
+###Read Person Ids
+```{r}
+subject_test <- tbl_df(read.table("data/test/subject_test.txt", header = FALSE, col.names = c("Person Id")))
+```
+#### Bind Person id  to Main Data Set
+```{r}
+main_test <- bind_cols(y_test, subject_test)
+```
+###Assign the feature lables to it
+```{r}
+x_test <- tbl_df(read.table("data/test/X_test.txt", header = FALSE,col.names = features_lbls))
+```
+#### Bind Activity to Main Data Set
+```{r}
+main_test <- bind_cols(main_test,x_test)
+```
+
+###Read Body Triaxial acceleration from the accelerometer
+####Read X Axis
+#####Read X
+```{r}
+body_acc_x_test <- tbl_df(read.table("data/test/Inertial Signals/body_acc_x_test.txt", col.names = body_acc_x_names))
+```
+#####Bind Body X acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, body_acc_x_test)
+```
+####Read Y Axis
+#####Create Name Vector
+#####Read Y
+```{r}
+body_acc_y_test <- tbl_df(read.table("data/test/Inertial Signals/body_acc_y_test.txt", col.names = body_acc_y_names))
+```
+#####Bind Body Y acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, body_acc_y_test)
+```
+####Read Z Axis
+#####Read Z
+```{r}
+body_acc_z_test <- tbl_df(read.table("data/test/Inertial Signals/body_acc_z_test.txt", col.names = body_acc_z_names))
+```
+#####Bind Body Z acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, body_acc_z_test)
+```
+
+###Read Total Triaxial acceleration from the accelerometer
+####Read X Axis
+```{r}
+total_acc_x_test <- tbl_df(read.table("data/test/Inertial Signals/total_acc_x_test.txt", col.names = total_acc_x_names))
+```
+#####Bind Body X acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, total_acc_x_test)
+```
+####Read Y Axis
+```{r}
+total_acc_y_test <- tbl_df(read.table("data/test/Inertial Signals/total_acc_y_test.txt", col.names = total_acc_y_names))
+```
+#####Bind Body Y acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, total_acc_y_test)
+```
+####Read Z Axis
+```{r}
+total_acc_z_test <- tbl_df(read.table("data/test/Inertial Signals/total_acc_z_test.txt", col.names = total_acc_z_names))
+```
+######Bind Body Z acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, total_acc_z_test)
+```
+
+###Read Triaxial Angular velocity from the gyroscope
+####Read X Axis
+```{r}
+body_gyro_x_test <- tbl_df(read.table("data/test/Inertial Signals/body_gyro_x_test.txt", col.names = body_gyro_x_names))
+```
+#####Bind Body X acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, body_gyro_x_test)
+```
+####Read Y Axis
+```{r}
+body_gyro_y_test <- tbl_df(read.table("data/test/Inertial Signals/body_gyro_y_test.txt", col.names = body_gyro_y_names))
+```
+#####Bind Body Y acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, body_gyro_y_test)
+```
+####Read Z Axis
+```{r}
+body_gyro_z_test <- tbl_df(read.table("data/test/Inertial Signals/body_gyro_z_test.txt", col.names = body_gyro_z_names))
+```
+#####Bind Body Z acceleration to Main Data Set
+```{r}
+main_test <- bind_cols(main_test, body_gyro_z_test)
+```
+##Merge the Two Main Dataset
+```{r}
+main <- union(main_training, main_test)
+main
+```
+
+#Extracts columns containing mean and standard deviation for each measurements
+```{r}
+main_std <- main %>% select(contains( "std"))
+main_mean <- main %>% select(contains( "mean"))
+main_std_mean <- bind_cols(main_std, main_mean)
+main_std_mean
+```
+#Tidy data set with the average of each variable for each activity and each subject.
+```{r}
+main_av <- main %>% group_by(ActivityLabel,ActivityName,Person.Id)%>%  summarise_each(funs(mean))
+main_av
+```
+
+
+
+
+
+
+
+
+
+
+
+
