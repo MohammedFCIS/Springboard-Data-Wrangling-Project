@@ -1,56 +1,201 @@
 ---
-title: 'Human Activity Recognition Using Smartphones Data Set'
+title: 'Human Activity Recognition Using Multisensing Data Collected from Smartphones -- Part 1'
 author: 'Ali Ezzat, Mohammed Ali'
 output: html_document
 ---
 
-# Frame the Problem
-Smartlab has developed an experiments with 30volunteers within an age bracket of 19-48 years to record certain daily human activities that has been recorded using accelerometer and gyroscope data from a waist-mounted Android-OS smartphone (Samsung Galaxy S II). The six studied activities are: *Walking*, *Walking Upstairs*, *Walking Downstairs*, *Sitting*, *Standing* and *Laying down* and the [results](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones) are made publicly available. 
+![](samsung_logo.png)
 
-So, our goal, as data scientists, to build a model that can detect these activities automatically. To that we have to do the following steps:
+This article is the first of a number of articles that form the mini-series, *"Human Activity Recognition Using Multisensing Data Collected from Smartphones"*. This mini-series illustrates the application of the data science process -- from data wrangling and exploratory data analysis to modeling and presentation of findings -- on a dataset collected from smartphones of multiple users.
 
-* *Process the data (__data wrangling__)*: Real, raw data is rarely usable out of the box. There are errors in data collection, corrupt records, missing values and many other challenges you will have to manage. You will first need to clean the data to convert it to a form that you can further analyze. 
+Let's get started!
 
-* *Explore the data*: Once we have cleaned the data, we have to understand the information contained within at a high level. What kinds of obvious trends or correlations do you see in the data? What are the high-level characteristics and are any of them more significant than others?
+--------------------------------------
 
-* *Perform in-depth analysis (__build the model__)*: This step is usually the meat of our project,where we apply all the cutting-edge machinery of data analysis to unearth high-value insights and predictions.
+--------------------------------------
 
-This tutorial will focus on the first step and the coming parts will involve the other two steps.
+--------------------------------------
 
-# Process the data
-Before moving any further we need to identify the data we have to know how to process it and make it ready for further steps.
+# About The Application
+Human Activity Recognition (HAR) is a research field where practitioners are interested in identifying actions performed by subjects based on context information regarding their current state and immediate surroundings. This has useful applications in healthcare. For example, a physician would be able to monitor an elderly patient with a chronic condition (such as Parkinson's disease) and observe differences in the patient's motion patterns over time or, should something happen to the patient, provide necessary intervention quickly.
 
-## Data description
+To be able to identify actions based on contextual information, the subjects (e.g. patients) need to be fitted with sensors that help collect the information needed to perform such analyses. Unfortunately, this presents a problem; subjects may find the fitted sensors to be uncomfortable or inconvenient, which leads to incompliance from the subject's side. 
 
-### Data row
-Each row in the dataset consists of the following:
+To deal with this issue, the researchers at [SmartLab @ University of Genova](https://sites.google.com/view/smartlabunige) proposed the use of smartphones to gather the required information. The rationale behind this is that smartphones have become ubiquitous nowadays and, as such, utilizing them for HAR purposes would pose negligible inconvenience for the subjects involved.
 
-* *Triaxial acceleration* from the __accelerometer__ (total acceleration) and the estimated body acceleration.
-* *Triaxial Angular velocity* from the __gyroscope__. 
-* A *561-feature vector* with time and frequency domain variables. 
-* Its activity label. (_the response variable_)
-* An identifier of the subject who carried out the experiment.
+--------------------------------------
 
-This record is divided among several files as follow:
+--------------------------------------
 
-* `train/X_train.txt`: Training set containing all the _561_ features that are listed in `features.txt`.
-* `train/subject_train.txt`: Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30.
-* `train/Inertial Signals/total_acc_x_train.txt`: The acceleration signal from the smartphone accelerometer X axis in standard gravity units 'g'. Every row shows a 128 element vector. The same description applies for the `total_acc_x_train.txt` and `total_acc_z_train.txt` files for the __Y__ and __Z__ axis. 
-* `train/Inertial Signals/body_acc_x_train.txt`: The body acceleration signal obtained by subtracting the gravity from the total acceleration. 
-* `train/Inertial Signals/body_gyro_x_train.txt`: The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second. 
-* `train/y_train.txt`: Activity output (the response variable).
+# About The Dataset
 
-### Data Issues
-So what are the issues we have here:
-* Each single row is distributed among many files.
-* Data columns are not labeled, labels are in seprate files or does not exist.
-* Testing data has the same issues. So we will need to process it too.
+The dataset used in this mini-series is accessible and downloadable from [here](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones). To form this dataset, a group of 30 volunteers (with ages ranging from 19 to 48 years) were each given a [Samsung Galaxy S II](https://www.gsmarena.com/samsung_i9100_galaxy_s_ii-3621.php) to wear on their waist. Each of the participants performed six distinct activities, namely:
 
-So, let us start resolving them one by one using [tidyverse](https://www.tidyverse.org/) that contains alot of libraris that are necessary for our data munging. 
+(@) Walking
+(@) Walking Upstairs
+(@) Walking Downstairs
+(@) Sitting
+(@) Standing
+(@) Laying
+
+During the participants' performing of these six activities, 3-axial linear acceleration and 3-axial angular velocity were captured (at a constant rate of 50Hz) using the accelerometer and gyroscope embedded in each of the smartphones that the participants had on them. The experiments conducted were video-recorded to manually label the data. In the dataset, 70% of the participants have been randomly selected to generate the training set, while the remaining 30% have been used to generate the test set.
+
+--------------------------------------
+
+--------------------------------------
+
+# About This Mini-Series
+
+As data scientists, our goal is to ultimately build a prediction model that can identify the above-mentioned activities automatically. To that end, we shall perform the following steps:
+
+* **Data Wrangling**  
+In data science projects, the raw data to be studied is typically not ready for analysis to be applied to it just yet. For example, there may be errors in data collection, corrupt records or missing values among many other possible challenges one may have to deal with. In these cases, one needs to *tidy up* the data and convert it to a form that is amenable to further analysis. This phase is also known as *data cleaning* or *data munging*.
+
+* **Exploratory Data Analysis (EDA)**  
+At this point, before moving on to build the model that will be used to perform prediction on the data, it is useful to understand the data at a higher level. The use of descriptive statistics (e.g. histograms, box plots, etc.) is pretty common here. The goal of EDA is to spot patterns and trends that are prevalent in the data as well as figure out which features may be more significant than others. Such findings can be very useful in guiding the next phase of the project where decisions are made regarding the details of the prediction model that will be built.
+
+* **Modeling**  
+This is where we build the model by training on the cleaned and labeled data. The resulting model will then be used for performing predictions on previously unseen data that are unlabeled.
+
+--------------------------------------
+
+--------------------------------------
+
+--------------------------------------
+
+# **Wrangling the Data**
+
+This article focuses on the first phase of the data science process, namely the *data wrangling* phase. In this phase, our main goal is to tidy up the data for analysis. We will also do a preliminary exploration of the contents of the data prior to the subsequent EDA phase when we will be having a closer look at the data.
+
+
+### Overview
+
+According to the description provided in the [dataset's webpage](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones), each record in the data consists of the following: 
+
+* **Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration**  
+In other words, acceleration readings along the X, Y and Z coordinate axes are provided in the data for each subject.
+
+* **Triaxial angular velocity from the gyroscope**  
+That is, the data contain X, Y and Z velocity readings for the subjects as well.
+
+* **A 561-feature vector with time and frequency domain variables**  
+These include the above-mentioned features of triaxial acceleration and angular velocity. We elaborate on these features in the following section.
+
+* **Its activity label**  
+This is the activity that we will attempting to accurately detect at a later stage of this project.
+
+* **An identifier of the subject who carried out the experiment**  
+Each subject has a unique ID that they are identified with.
+
+
+### The Features
+
+The features selected for this dataset come from the accelerometer and gyroscope 3-axial raw signals **tAcc-XYZ** and **tGyro-XYZ**. These time domain signals (prefix '**t**' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (**tBodyAcc-XYZ** and **tGravityAcc-XYZ**) using another low pass Butterworth filter with a corner frequency of 0.3 Hz.
+
+Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (**tBodyAccJerk-XYZ** and **tBodyGyroJerk-XYZ**). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (**tBodyAccMag**, **tGravityAccMag**, **tBodyAccJerkMag**, **tBodyGyroMag**, **tBodyGyroJerkMag**).
+
+Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing **fBodyAcc-XYZ**, **fBodyAccJerk-XYZ**, **fBodyGyro-XYZ**, **fBodyAccJerkMag**, **fBodyGyroMag**, **fBodyGyroJerkMag**. (Note the '**f**' to indicate frequency domain signals).
+
+The following signals were used to estimate variables of the final feature vector for each pattern:
+'**-XYZ**' is used to denote 3-axial signals in the X, Y and Z directions.
+
+* **tBodyAcc-XYZ**
+* **tGravityAcc-XYZ**
+* **tBodyAccJerk-XYZ**
+* **tBodyGyro-XYZ**
+* **tBodyGyroJerk-XYZ**
+* **tBodyAccMag**
+* **tGravityAccMag**
+* **tBodyAccJerkMag**
+* **tBodyGyroMag**
+* **tBodyGyroJerkMag**
+* **fBodyAcc-XYZ**
+* **fBodyAccJerk-XYZ**
+* **fBodyGyro-XYZ**
+* **fBodyAccMag**
+* **fBodyAccJerkMag**
+* **fBodyGyroMag**
+* **fBodyGyroJerkMag**
+
+For the above signals, the values below have been computed and used to form the feature vectors for the records: 
+
+* Mean value: **mean()**
+* Standard deviation: **std()**
+* Median absolute deviation: **mad()**
+* Largest value in array: **max()**
+* Smallest value in array: **min()**
+* Signal magnitude area: **sma()**
+* Energy measure (sum of the squares divided by the number of values): **energy()**
+* Interquartile range: **iqr()**
+* Signal entropy: **entropy()**
+* Autoregression coefficients with Burg order equal to 4: **arCoeff()**
+* Correlation coefficient between two signals: **correlation()**
+* Index of the frequency component with largest magnitude: **maxInds()**
+* Weighted average of the frequency components to obtain a mean frequency: **meanFreq()**
+* Skewness of the frequency domain signal: **skewness()**
+* Kurtosis of the frequency domain signal: **kurtosis()**
+* Energy of a frequency interval within the 64 bins of the FFT of each window: **bandsEnergy()**
+* Angle between two vectors: **angle()**
+
+Finally, these are additional vectors obtained by averaging the signals in a signal window sample. These are used on the **angle()** variable:
+
+* **gravityMean**
+* **tBodyAccMean**
+* **tBodyAccJerkMean**
+* **tBodyGyroMean**
+* **tBodyGyroJerkMean**
+
+
+### The Files
+
+In the ZIP file that was downloaded from the [dataset's webpage](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones), the following files were found. Note that the number of rows in these files is the same and correspond to one another; i.e. the i-th row in all of the these files belong to the same record.
+
+* ```train/X_train.txt```  
+This file contains the feature matrix for the training set where the rows are the observations (i.e. records) and the columns are the 561 features that are described in the previous section.
+
+* ```train/subject_train.txt```  
+Each row in this file contains the identifier of the subject who performed the activity in the corresponding row from the ```X_train.txt``` file. Since the number of subjects is 30, the value of this identifier ranges from 1 to 30.
+
+* ```train/Inertial Signals/total_acc_[xyz]_train.txt```  
+The acceleration signal from the smartphone X-axis accelerometer, ```total_acc_x_train.txt```, is in standard gravity units 'g' (g &#8776; 9.8 m/sec<sup>2</sup>). Every row shows a 128 element vector. The same description applies for the ```total_acc_y_train.txt``` and ```total_acc_z_train.txt``` files for the Y and Z axes.
+
+* ```train/Inertial Signals/body_acc_[xyz]_train.txt```  
+The body acceleration signal obtained by subtracting the gravity from the total acceleration.
+
+* ```train/Inertial Signals/body_gyro_[xyz]_train.txt```  
+The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second.
+
+* ```train/y_train.txt```  
+The training (activity) labels. These are the values of the response variable that we will aim to predict later in the modeling phase of this mini-series.
+
+Note that the above files are for the training set and that the test set has similar files that correspond to them. By the way, there is one more file that we will be using shortly and that is ```features.txt``` which contains the names of the 561 features in the ```X_train.txt``` file. Finally, there is a few extra notes supplied in the ```README.txt``` file included with the dataset:
+
+* Features are normalized and bounded within [-1,1].
+* Each feature vector is a row on the text file.
+* The units used for the accelerations (total and body) are 'g's.
+* The gyroscope units are rad/sec.
+* A video of the experiment including an example of the 6 recorded activities with one of the participants can be seen in [this link](http://www.youtube.com/watch?v=XOEN9W05_4A)
+
+
+### Issues with the Data
+
+The dataset comes with a number of issues that need addressing:
+
+* Each single record is distributed among multiple files.
+* Columns in the data files are not labeled, and the labels for these columns are either in a separate file or do not exist.
+* The test set data have the same issues, so they will need to be processed as well.
+
+So, let's start resolving these issues one by one using the [tidyverse](https://www.tidyverse.org/) package that contains many libraries that are necessary for our data munging.
 
 ```{r load_lib}
 suppressMessages(library(tidyverse))
 ```
+
+--------------------------------------
+
+--------------------------------------
+
+--------------------------------------
 
 ## Data processing
 
